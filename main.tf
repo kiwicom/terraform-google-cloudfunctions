@@ -1,10 +1,7 @@
-// TODO: move this to its own repository
-// TODO: update cookiecutter-sls accordingly, code etc
 // TODO: migrate projects
 // TODO: Update tf-sls-projects, give permissions for pub sub
 // TODO: update gitlab ci templates readme
 // TODO: vault setup
-// TODO: pass APIs to enable
 
 resource "google_cloudfunctions_function" "function_http" {
   count   = var.trigger_http ? 1 : 0

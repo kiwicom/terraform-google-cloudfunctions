@@ -6,7 +6,7 @@ resource "google_pubsub_topic" "scheduler" {
 resource "google_cloud_scheduler_job" "scheduler" {
   count       = var.trigger_scheduler ? 1 : 0
   name        = "${var.sls_project_name}-${var.entry_point}"
-  description = "Triggers ${google_cloudfunctions_function.function_pubsub.name} function through ${google_pubsub_topic.scheduler[0].name} topic"
+  description = "Triggers ${google_cloudfunctions_function.function_pubsub[0].name} function through ${google_pubsub_topic.scheduler[0].name} topic"
   schedule    = var.schedule
   time_zone   = var.schedule_time_zone
   region      = var.region

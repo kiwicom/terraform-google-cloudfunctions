@@ -58,8 +58,9 @@ variable "service_account_email" {
 }
 
 variable "environment_variables" {
-  type        = object({})
+  type        = map(string)
   description = "A set of key/value environment variable pairs to assign to the function"
+  default     = {}
 }
 
 variable "schedule" {
@@ -75,8 +76,8 @@ variable "schedule_time_zone" {
 }
 
 variable "invokers" {
-  type        = set(string)
-  description = "Set of function invokers, defaults to allUsers"
+  type        = list(string)
+  description = "List of function invokers, defaults to allUsers"
   default     = [
     "allUsers"
   ]

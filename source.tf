@@ -2,13 +2,11 @@ data "archive_file" "source_archive" {
   type        = "zip"
   source_dir  = path.root
   excludes    = [
-    ".coafile",
     ".git",
     ".gitignore",
     ".gitlab-ci.yml",
     ".idea",
     ".pre-commit-config.yaml",
-    ".pylintrc",
     ".terraform",
     ".terraform.tfstate.lock.info",
     ".terraform-version",

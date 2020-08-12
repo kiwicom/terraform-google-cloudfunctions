@@ -1,3 +1,11 @@
+// TODO: move this to its own repository
+// TODO: update cookiecutter-sls accordingly, code etc
+// TODO: migrate projects
+// TODO: Update tf-sls-projects, give permissions for pub sub
+// TODO: update gitlab ci templates readme
+// TODO: vault setup
+// TODO: pass APIs to enable
+
 resource "google_cloudfunctions_function" "function_http" {
   count   = var.trigger_http ? 1 : 0
   name    = "${var.sls_project_name}-${var.entry_point}"
@@ -43,7 +51,7 @@ resource "google_cloudfunctions_function" "function_pubsub" {
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
-  for_each       = var.trigger_http ? var.invokers : toset([])
+  for_each       = var.trigger_http ? toset(var.invokers) : toset([])
   project        = google_cloudfunctions_function.function_http[0].project
   region         = google_cloudfunctions_function.function_http[0].region
   cloud_function = google_cloudfunctions_function.function_http[0].name

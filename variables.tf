@@ -3,6 +3,12 @@ variable "sls_project_name" {
   description = "Project name composed of {project_name}-{project_env}, stored in CI/CD env variables"
 }
 
+variable "function_name" {
+  type        = string
+  description = "Function name. If empty, it defaults to {var.sls_project_name}-{var.entry_point}"
+  default     = ""
+}
+
 variable "cf_src_bucket" {
   type        = string
   description = "Source archive bucket for Cloud Functions, stored in CI/CD env variables"
@@ -81,4 +87,8 @@ variable "invokers" {
   default     = [
     "allUsers"
   ]
+}
+
+locals {
+  function_name = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
 }

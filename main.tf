@@ -5,7 +5,7 @@
 
 resource "google_cloudfunctions_function" "function_http" {
   count   = var.trigger_http ? 1 : 0
-  name    = "${var.sls_project_name}-${var.entry_point}"
+  name    = local.function_name
   project = var.project
 
   entry_point  = var.entry_point
@@ -25,7 +25,7 @@ resource "google_cloudfunctions_function" "function_http" {
 
 resource "google_cloudfunctions_function" "function_pubsub" {
   count   = var.trigger_scheduler ? 1 : 0
-  name    = "${var.sls_project_name}-${var.entry_point}"
+  name    = local.function_name
   project = var.project
 
   entry_point = var.entry_point

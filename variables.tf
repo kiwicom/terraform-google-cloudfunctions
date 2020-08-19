@@ -69,6 +69,12 @@ variable "environment_variables" {
   default     = {}
 }
 
+variable "labels" {
+  type        = map(string)
+  description = "A set of key/value label pairs to assign to the function"
+  default     = {}
+}
+
 variable "schedule" {
   type        = string
   description = "Describes the schedule on which the job will be executed"

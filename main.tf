@@ -1,8 +1,3 @@
-// TODO: migrate projects
-// TODO: Update tf-sls-projects, give permissions for pub sub
-// TODO: update gitlab ci templates readme
-// TODO: vault setup
-
 resource "google_cloudfunctions_function" "function_http" {
   count   = var.trigger_http ? 1 : 0
   name    = local.function_name

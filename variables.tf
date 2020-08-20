@@ -38,8 +38,13 @@ variable "project" {
 
 variable "region" {
   type        = string
-  default     = "europe-west1"
-  description = "Google Cloud Platform default region"
+  default     = "europe-west3"
+  description = "Region for Cloud Functions and accompanying resources"
+}
+
+variable "region_app_engine" {
+  type        = string
+  description = "Region for App Engine (Scheduler). If not provided, defaults to region set above"
 }
 
 variable "runtime" {
@@ -96,5 +101,6 @@ variable "invokers" {
 }
 
 locals {
-  function_name = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
+  function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
+  region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
 }

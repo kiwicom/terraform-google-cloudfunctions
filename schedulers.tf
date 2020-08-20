@@ -9,7 +9,7 @@ resource "google_cloud_scheduler_job" "scheduler" {
   description = "Triggers ${google_cloudfunctions_function.function_pubsub[0].name} function through ${google_pubsub_topic.scheduler[0].name} topic"
   schedule    = var.schedule
   time_zone   = var.schedule_time_zone
-  region      = var.region
+  region      = local.region_app_engine
 
   pubsub_target {
     topic_name = google_pubsub_topic.scheduler[0].id

@@ -99,6 +99,30 @@ variable "schedule_time_zone" {
   default     = "Europe/Prague"
 }
 
+variable "schedule_retry_config" {
+  type        = object({
+    retry_count          = number,
+    max_retry_duration   = string,
+    min_backoff_duration = string,
+    max_backoff_duration = string,
+    max_doublings        = number,
+  })
+  description = "By default, if a job does not complete successfully, meaning that an acknowledgement is not received from the handler, then it will be retried with exponential backoff"
+  default     = {
+    retry_count          = 0,
+    max_retry_duration   = "0s",
+    min_backoff_duration = "5s",
+    max_backoff_duration = "3600s",
+    max_doublings        = 5
+  }
+}
+
+variable "schedule_payload" {
+  type        = string
+  description = "Payload for Cloud Scheduler"
+  default     = "ping"
+}
+
 variable "invokers" {
   type        = list(string)
   description = "List of function invokers, defaults to allUsers"

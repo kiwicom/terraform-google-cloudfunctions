@@ -12,7 +12,16 @@ resource "google_cloud_scheduler_job" "scheduler" {
   region      = local.region_app_engine
 
   pubsub_target {
+    attributes = {}
     topic_name = google_pubsub_topic.scheduler[0].id
-    data       = base64encode("Ping")
+    data       = base64encode(var.schedule_payload)
+  }
+
+  retry_config {
+    retry_count          = var.schedule_retry_config.retry_count
+    max_retry_duration   = var.schedule_retry_config.max_retry_duration
+    min_backoff_duration = var.schedule_retry_config.min_backoff_duration
+    max_backoff_duration = var.schedule_retry_config.max_backoff_duration
+    max_doublings        = var.schedule_retry_config.max_doublings
   }
 }

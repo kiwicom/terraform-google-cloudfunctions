@@ -63,6 +63,12 @@ variable "timeout" {
   default     = 60
 }
 
+variable "max_instances" {
+  type        = number
+  description = "The limit on the maximum number of function instances that may coexist at a given time"
+  default     = 0
+}
+
 variable "service_account_email" {
   type        = string
   description = "Self-provided service account to run the function with, stored in CI/CD env variables"

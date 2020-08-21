@@ -10,6 +10,7 @@ resource "google_cloudfunctions_function" "function_http" {
   region              = var.region
   available_memory_mb = var.available_memory_mb
   timeout             = var.timeout
+  max_instances       = var.max_instances
 
   service_account_email = var.service_account_email
   environment_variables = var.environment_variables
@@ -30,6 +31,7 @@ resource "google_cloudfunctions_function" "function_pubsub" {
   region              = var.region
   available_memory_mb = var.available_memory_mb
   timeout             = var.timeout
+  max_instances       = var.max_instances
 
   service_account_email = var.service_account_email
   environment_variables = var.environment_variables

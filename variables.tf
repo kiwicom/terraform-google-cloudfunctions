@@ -45,6 +45,7 @@ variable "region" {
 variable "region_app_engine" {
   type        = string
   description = "Region for App Engine (Scheduler). If not provided, defaults to region set above"
+  default     = ""
 }
 
 variable "runtime" {

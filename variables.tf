@@ -134,7 +134,7 @@ variable "invokers" {
 locals {
   function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
-  labels            = concat({
+  labels            = merge({
     deployment-tool = "terraform"
   }, var.labels)
 }

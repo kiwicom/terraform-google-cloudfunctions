@@ -125,10 +125,8 @@ variable "schedule_payload" {
 
 variable "invokers" {
   type        = list(string)
-  description = "List of function invokers, defaults to allUsers"
-  default     = [
-    "allUsers"
-  ]
+  description = "List of function invokers (i.e. allUsers if you want to Allow unauthenticated)"
+  default     = []
 }
 
 locals {

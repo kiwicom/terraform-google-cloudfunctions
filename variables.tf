@@ -14,6 +14,12 @@ variable "cf_src_bucket" {
   description = "Source archive bucket for Cloud Functions, stored in CI/CD env variables"
 }
 
+variable "source_dir" {
+  type        = string
+  description = "Location of source code to deploy, without a leading slash"
+  default     = ""
+}
+
 variable "entry_point" {
   type        = string
   description = "Name of the function that will be executed when the Google Cloud Function is triggered"
@@ -130,6 +136,7 @@ variable "invokers" {
 }
 
 locals {
+  source_dir        = var.source_dir != "" ? "${path.root}/${var.source_dir}" : path.root
   function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
   labels            = merge({

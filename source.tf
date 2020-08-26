@@ -1,6 +1,6 @@
 data "archive_file" "source_archive" {
   type        = "zip"
-  source_dir  = path.root
+  source_dir  = local.source_dir
   excludes    = [
     ".git",
     ".gitignore",
@@ -29,7 +29,7 @@ data "archive_file" "source_archive" {
 }
 
 resource "google_storage_bucket_object" "source_object" {
-  name   = "source-${data.archive_file.source_archive.output_md5}.zip"
+  name   = "source-${local.function_name}-${data.archive_file.source_archive.output_md5}.zip"
   bucket = var.cf_src_bucket
   source = data.archive_file.source_archive.output_path
 }

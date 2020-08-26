@@ -120,7 +120,7 @@ variable "schedule_retry_config" {
 variable "schedule_payload" {
   type        = string
   description = "Payload for Cloud Scheduler"
-  default     = "ping"
+  default     = "{}"
 }
 
 variable "invokers" {

@@ -1,3 +1,9 @@
+// TODO: remove experiments in 0.13
+terraform {
+  experiments = [
+    variable_validation]
+}
+
 variable "sls_project_name" {
   type        = string
   description = "Project name composed of {project_name}-{project_env}, stored in CI/CD env variables"
@@ -25,16 +31,26 @@ variable "entry_point" {
   description = "Name of the function that will be executed when the Google Cloud Function is triggered"
 }
 
-variable "trigger_http" {
-  type        = bool
-  description = "If true, function will be assigned an endpoint"
-  default     = false
+variable "trigger_type" {
+  type        = string
+  description = "Function trigger type that must be provided"
+
+  validation {
+    condition     = can(regex("^(http|topic|scheduler|bucket)$", var.trigger_type))
+    error_message = "Possible values are: http, topic, scheduler or bucket."
+  }
 }
 
-variable "trigger_scheduler" {
-  type        = bool
-  description = "If true, scheduler will be configured and function will be triggered by it"
-  default     = false
+variable "trigger_event_type" {
+  type        = string
+  description = "The type of event to observe. Only for topic and bucket triggered functions"
+  default     = ""
+}
+
+variable "trigger_event_resource" {
+  type        = string
+  description = "The name or partial URI of the resource from which to observe events. Only for topic and bucket triggered functions"
+  default     = ""
 }
 
 variable "project" {
@@ -136,6 +152,12 @@ variable "invokers" {
 }
 
 locals {
+  // Constants
+  TRIGGER_TYPE_HTTP      = "http"
+  TRIGGER_TYPE_TOPIC     = "topic"
+  TRIGGER_TYPE_SCHEDULER = "scheduler"
+  TRIGGER_TYPE_BUCKET    = "bucket"
+
   source_dir        = var.source_dir != "" ? "${path.root}/${var.source_dir}" : path.root
   function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region

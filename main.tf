@@ -1,5 +1,5 @@
 resource "google_cloudfunctions_function" "function_http" {
-  count   = var.trigger_http ? 1 : 0
+  count   = var.trigger_type == local.TRIGGER_TYPE_HTTP ? 1 : 0
   name    = local.function_name
   project = var.project
 
@@ -20,8 +20,8 @@ resource "google_cloudfunctions_function" "function_http" {
   source_archive_object = google_storage_bucket_object.source_object.name
 }
 
-resource "google_cloudfunctions_function" "function_pubsub" {
-  count   = var.trigger_scheduler ? 1 : 0
+resource "google_cloudfunctions_function" "function_event" {
+  count   = var.trigger_type != local.TRIGGER_TYPE_HTTP ? 1 : 0
   name    = local.function_name
   project = var.project
 
@@ -41,13 +41,13 @@ resource "google_cloudfunctions_function" "function_pubsub" {
   source_archive_object = google_storage_bucket_object.source_object.name
 
   event_trigger {
-    event_type = "google.pubsub.topic.publish"
-    resource   = google_pubsub_topic.scheduler[0].name
+    event_type = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? "google.pubsub.topic.publish" : var.trigger_event_type
+    resource   = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? google_pubsub_topic.scheduler[0].name : var.trigger_event_resource
   }
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
-  for_each       = var.trigger_http ? toset(var.invokers) : toset([])
+  for_each       = var.trigger_type == local.TRIGGER_TYPE_HTTP ? toset(var.invokers) : toset([])
   project        = google_cloudfunctions_function.function_http[0].project
   region         = google_cloudfunctions_function.function_http[0].region
   cloud_function = google_cloudfunctions_function.function_http[0].name

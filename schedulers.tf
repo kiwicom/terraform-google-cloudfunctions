@@ -1,6 +1,7 @@
 resource "google_pubsub_topic" "scheduler" {
-  count = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? 1 : 0
-  name  = local.function_name
+  count  = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? 1 : 0
+  name   = local.function_name
+  labels = local.labels
 }
 
 resource "google_cloud_scheduler_job" "scheduler" {

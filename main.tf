@@ -42,7 +42,7 @@ resource "google_cloudfunctions_function" "function_event" {
 
   event_trigger {
     event_type = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? "google.pubsub.topic.publish" : var.trigger_event_type
-    resource   = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? google_pubsub_topic.scheduler[0].name : var.trigger_event_resource
+    resource   = var.trigger_type == local.TRIGGER_TYPE_SCHEDULER ? google_pubsub_topic.scheduler[0].id : var.trigger_event_resource
   }
 }
 

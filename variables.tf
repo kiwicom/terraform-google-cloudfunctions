@@ -1,9 +1,3 @@
-// TODO: remove experiments in 0.13
-terraform {
-  experiments = [
-    variable_validation]
-}
-
 variable "sls_project_name" {
   type        = string
   description = "Project name composed of {project_name}-{project_env}, stored in CI/CD env variables"

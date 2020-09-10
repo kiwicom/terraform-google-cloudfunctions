@@ -198,5 +198,5 @@ locals {
   is_vault_sync_env            = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_ENV
   is_vault_sync_secret_manager = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
 
-  environment_variables =  local.is_vault_sync_env ? merge(var.environment_variables, data.vault_generic_secret.secret.data) : var.environment_variables
+  environment_variables =  local.is_vault_sync_env ? merge(var.environment_variables, data.vault_generic_secret.secret[0].data) : var.environment_variables
 }

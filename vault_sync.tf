@@ -16,6 +16,6 @@ resource "google_secret_manager_secret" "secret-json" {
 
 resource "google_secret_manager_secret_version" "secret-version-json" {
   count       = local.is_vault_sync_secret_manager ? 1 : 0
-  secret      = google_secret_manager_secret.secret-json.id
-  secret_data = data.vault_generic_secret.secret.data_json
+  secret      = google_secret_manager_secret.secret-json[0].id
+  secret_data = data.vault_generic_secret.secret[0].data_json
 }

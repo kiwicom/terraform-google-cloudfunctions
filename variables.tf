@@ -151,6 +151,32 @@ variable "vpc_access_connector" {
   default     = null
 }
 
+variable "gitlab_project_path" {
+  type        = string
+  description = "A GitLab path to the project (CI_PROJECT_PATH)"
+}
+
+variable "sls_project_env" {
+  type        = string
+  description = "Project's SLS environment."
+}
+
+variable "vault_sync" {
+  type        = object({
+    enabled = bool,
+    type    = string
+  })
+  description = "Configure VaultSync"
+  default     = {
+    enabled = false,
+    type    = "secret_manager"
+  }
+  validation {
+    condition     = can(regex("^(secret_manager|env)$", var.vault_sync.type))
+    error_message = "Possible values are: secret_manager or env."
+  }
+}
+
 locals {
   // Constants
   TRIGGER_TYPE_HTTP      = "http"
@@ -158,10 +184,19 @@ locals {
   TRIGGER_TYPE_SCHEDULER = "scheduler"
   TRIGGER_TYPE_BUCKET    = "bucket"
 
+  VAULT_SYNC_TYPE_SECRET_MANAGER = "secret_manager"
+  VAULT_SYNC_TYPE_ENV            = "env"
+
   source_dir        = var.source_dir != "" ? "${path.root}/${var.source_dir}" : path.root
   function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
   labels            = merge({
     deployment-tool = "terraform"
   }, var.labels)
+  vault_path        = "secret/kw/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
+
+  is_vault_sync_env            = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_ENV
+  is_vault_sync_secret_manager = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
+
+  environment_variables =  local.is_vault_sync_env ? merge(var.environment_variables, data.vault_generic_secret.secret.data) : var.environment_variables
 }

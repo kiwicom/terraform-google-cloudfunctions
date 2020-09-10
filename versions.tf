@@ -6,6 +6,9 @@ terraform {
     google = {
       source = "hashicorp/google"
     }
+    vault = {
+      source = "hashicorp/vault"
+    }
   }
   required_version = ">= 0.13"
 }

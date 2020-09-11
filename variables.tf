@@ -161,18 +161,18 @@ variable "sls_project_env" {
   description = "Project's SLS environment."
 }
 
-variable "vault_sync" {
-  type        = object({
-    enabled = bool,
-    type    = string
-  })
-  description = "Configure VaultSync"
-  default     = {
-    enabled = false,
-    type    = "secret_manager"
-  }
+variable "vault_sync_enabled" {
+  type        = bool
+  description = "Set this value to true if you want to sync secrets from Vault."
+}
+
+variable "vault_sync_type" {
+  type        = string
+  description = "Select sync type for Vault (env or secret_manager)."
+  default     = "secret_manager"
+
   validation {
-    condition     = can(regex("^(secret_manager|env)$", var.vault_sync.type))
+    condition     = can(regex("^(secret_manager|env)$", var.vault_sync_type))
     error_message = "Possible values are: secret_manager or env."
   }
 }
@@ -195,8 +195,8 @@ locals {
   }, var.labels)
   vault_path        = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
 
-  is_vault_sync_env            = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_ENV
-  is_vault_sync_secret_manager = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
+  is_vault_sync_env            = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_ENV
+  is_vault_sync_secret_manager = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
 
   environment_variables =  local.is_vault_sync_env ? merge(var.environment_variables, data.vault_generic_secret.secret[0].data) : var.environment_variables
 }

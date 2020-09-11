@@ -1,5 +1,5 @@
 data "vault_generic_secret" "secret" {
-  count = var.vault_sync.enabled ? 1 : 0
+  count = var.vault_sync_enabled ? 1 : 0
   path  = local.vault_path
 }
 

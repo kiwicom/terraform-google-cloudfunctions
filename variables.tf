@@ -193,7 +193,7 @@ locals {
   labels            = merge({
     deployment-tool = "terraform"
   }, var.labels)
-  vault_path        = "kw/secret/data/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
+  vault_path        = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
 
   is_vault_sync_env            = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_ENV
   is_vault_sync_secret_manager = var.vault_sync.enabled && var.vault_sync.type == local.VAULT_SYNC_TYPE_SECRET_MANAGER

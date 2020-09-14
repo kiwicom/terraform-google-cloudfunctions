@@ -25,6 +25,8 @@ module "your_application_http" {
 
   service_account_email = var.service_account_email
   environment_variables = {}
+  
+  vault_sync_enabled = true
 
   invokers = [
     "allUsers",
@@ -55,6 +57,8 @@ module "your_application_scheduler" {
 
   service_account_email = var.service_account_email
   environment_variables = {}
+  
+  vault_sync_enabled = true
 
   schedule              = "50 */4 * * *"
   schedule_time_zone    = "Europe/Prague"
@@ -92,6 +96,8 @@ module "your_applicaton_topic" {
 
   service_account_email = var.service_account_email
   environment_variables = {}
+  
+  vault_sync_enabled = true
 
   trigger_event_type     = "google.pubsub.topic.publish"
   trigger_event_resource = "topic-id"
@@ -118,10 +124,20 @@ module "your_applicaton_bucket" {
   service_account_email = var.service_account_email
   environment_variables = {}
 
+  vault_sync_enabled = true
+
   trigger_event_type     = "google.storage.object.finalize"
   trigger_event_resource = "bucket-id"
 }
 ```
+
+## Vault sync
+
+Module can sync secrets from Vault. It can sync either to Google Secret Manager or environment variables (not recommended).
+
+To enable sync just add `vault_sync_enabled = true` to module definition.
+
+You can select sync type with `vault_sync_type` variable. It can be set to `secret_manager` or `env`.
 
 ## Variables
 

@@ -116,7 +116,7 @@ variable "schedule_time_zone" {
 }
 
 variable "schedule_retry_config" {
-  type        = object({
+  type = object({
     retry_count          = number,
     max_retry_duration   = string,
     min_backoff_duration = string,
@@ -124,7 +124,7 @@ variable "schedule_retry_config" {
     max_doublings        = number,
   })
   description = "By default, if a job does not complete successfully, meaning that an acknowledgement is not received from the handler, then it will be retried with exponential backoff"
-  default     = {
+  default = {
     retry_count          = 0,
     max_retry_duration   = "0s",
     min_backoff_duration = "5s",
@@ -190,17 +190,17 @@ locals {
   source_dir        = var.source_dir != "" ? "${path.root}/${var.source_dir}" : path.root
   function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
-  labels            = merge({
+  labels = merge({
     deployment-tool = "terraform"
   }, var.labels)
-  vault_path        = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
+  vault_path = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
 
   is_vault_sync_env            = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_ENV
   is_vault_sync_secret_manager = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
 
   default_environment_variables = {
-    GCP_PROJECT_ID: var.project,
-    GCP_SECRET_ID: var.sls_project_name
+    GCP_PROJECT_ID : var.project,
+    GCP_SECRET_ID : var.sls_project_name
   }
 
   environment_variables = local.is_vault_sync_env ? merge(local.default_environment_variables, var.environment_variables, data.vault_generic_secret.secret[0].data) : merge(local.default_environment_variables, var.environment_variables)

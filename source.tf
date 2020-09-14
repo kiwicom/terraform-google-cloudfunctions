@@ -1,7 +1,7 @@
 data "archive_file" "source_archive" {
-  type        = "zip"
-  source_dir  = local.source_dir
-  excludes    = [
+  type       = "zip"
+  source_dir = local.source_dir
+  excludes = [
     ".cache",
     ".git",
     ".gitignore",

@@ -1,9 +1,3 @@
-// TODO: remove experiments in 0.13
-terraform {
-  experiments = [
-    variable_validation]
-}
-
 variable "sls_project_name" {
   type        = string
   description = "Project name composed of {project_name}-{project_env}, stored in CI/CD env variables"
@@ -122,7 +116,7 @@ variable "schedule_time_zone" {
 }
 
 variable "schedule_retry_config" {
-  type        = object({
+  type = object({
     retry_count          = number,
     max_retry_duration   = string,
     min_backoff_duration = string,
@@ -130,7 +124,7 @@ variable "schedule_retry_config" {
     max_doublings        = number,
   })
   description = "By default, if a job does not complete successfully, meaning that an acknowledgement is not received from the handler, then it will be retried with exponential backoff"
-  default     = {
+  default = {
     retry_count          = 0,
     max_retry_duration   = "0s",
     min_backoff_duration = "5s",
@@ -157,6 +151,32 @@ variable "vpc_access_connector" {
   default     = null
 }
 
+variable "gitlab_project_path" {
+  type        = string
+  description = "A GitLab path to the project (CI_PROJECT_PATH)"
+}
+
+variable "sls_project_env" {
+  type        = string
+  description = "Project's SLS environment."
+}
+
+variable "vault_sync_enabled" {
+  type        = bool
+  description = "Set this value to true if you want to sync secrets from Vault."
+}
+
+variable "vault_sync_type" {
+  type        = string
+  description = "Select sync type for Vault (env or secret_manager)."
+  default     = "secret_manager"
+
+  validation {
+    condition     = can(regex("^(secret_manager|env)$", var.vault_sync_type))
+    error_message = "Possible values are: secret_manager or env."
+  }
+}
+
 locals {
   // Constants
   TRIGGER_TYPE_HTTP      = "http"
@@ -164,10 +184,24 @@ locals {
   TRIGGER_TYPE_SCHEDULER = "scheduler"
   TRIGGER_TYPE_BUCKET    = "bucket"
 
+  VAULT_SYNC_TYPE_SECRET_MANAGER = "secret_manager"
+  VAULT_SYNC_TYPE_ENV            = "env"
+
   source_dir        = var.source_dir != "" ? "${path.root}/${var.source_dir}" : path.root
   function_name     = var.function_name != "" ? var.function_name : "${var.sls_project_name}-${var.entry_point}"
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
-  labels            = merge({
+  labels = merge({
     deployment-tool = "terraform"
   }, var.labels)
+  vault_path = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
+
+  is_vault_sync_env            = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_ENV
+  is_vault_sync_secret_manager = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
+
+  default_environment_variables = {
+    GCP_PROJECT_ID : var.project,
+    GCP_SECRET_ID : var.sls_project_name
+  }
+
+  environment_variables = local.is_vault_sync_env ? merge(local.default_environment_variables, var.environment_variables, data.vault_generic_secret.secret[0].data) : merge(local.default_environment_variables, var.environment_variables)
 }

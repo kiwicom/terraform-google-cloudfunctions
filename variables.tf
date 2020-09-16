@@ -151,6 +151,12 @@ variable "invokers" {
   default     = []
 }
 
+variable "vpc_access_connector" {
+  type        = string
+  description = "Enable access to shared VPC 'projects/<host-project>/locations/<region>/connectors/<connector>'"
+  default     = null
+}
+
 locals {
   // Constants
   TRIGGER_TYPE_HTTP      = "http"

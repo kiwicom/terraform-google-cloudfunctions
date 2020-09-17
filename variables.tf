@@ -198,7 +198,7 @@ locals {
   is_vault_sync_env            = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_ENV
   is_vault_sync_secret_manager = var.vault_sync_enabled && var.vault_sync_type == local.VAULT_SYNC_TYPE_SECRET_MANAGER
 
-  secret_id = "${var.sls_project_name}_${var.entry_point}"
+  secret_id = local.function_name
 
   default_environment_variables = {
     GCP_PROJECT_ID : var.project,

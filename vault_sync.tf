@@ -5,7 +5,7 @@ data "vault_generic_secret" "secret" {
 
 resource "google_secret_manager_secret" "secret-json" {
   count     = local.is_vault_sync_secret_manager ? 1 : 0
-  secret_id = var.sls_project_name
+  secret_id = local.secret_id
   labels = merge(local.labels, {
     vault_path = replace(local.vault_path, "/", "_")
   })

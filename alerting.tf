@@ -9,7 +9,7 @@ variable "alert_slack_token" {
 
 variable "alert_channel" {
   description = "A Slack channel to send alerts to."
-  default     = "#dev-null"
+  default     = "#tmp-alerts-sls"
 }
 
 variable "alert_alignment_period" {

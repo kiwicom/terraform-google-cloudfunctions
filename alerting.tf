@@ -31,9 +31,9 @@ resource "google_monitoring_notification_channel" "slack" {
   type         = "slack"
   description  = "A slack notification channel for ${local.function_name}"
   enabled      = true
-  labels = merge(local.labels, {
+  labels = {
     "channel_name" = var.alert_channel
-  })
+  }
 
   sensitive_labels {
     auth_token = var.alert_slack_token

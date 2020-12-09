@@ -192,6 +192,9 @@ locals {
   region_app_engine = var.region_app_engine != "" ? var.region_app_engine : var.region
   labels = merge({
     deployment-tool = "terraform"
+    gitlab-path     = replace(var.gitlab_project_path, "/", "_")
+    vault-sync      = var.vault_sync_enabled ? var.vault_sync_type : ""
+    alert-channel   = local.alerts_enabled ? replace(var.alert_channel, "#", "") : ""
   }, var.labels)
   vault_path = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
 

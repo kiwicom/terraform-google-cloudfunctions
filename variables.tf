@@ -209,7 +209,7 @@ locals {
     communication-channel = replace(var.communication_channel, "#", "")
     responsible-person    = var.responsible_person
     bill_project          = var.project
-    bill_path             = lower(try(var.labels.app, ""))
+    bill_path             = lower(try(var.labels.bill_path, try(var.labels.app, "")))
   }, var.labels)
   vault_path = "kw/secret/${var.gitlab_project_path}/runtime/${var.sls_project_env}"
 

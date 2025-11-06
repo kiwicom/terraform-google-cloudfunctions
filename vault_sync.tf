@@ -10,7 +10,7 @@ resource "google_secret_manager_secret" "secret-json" {
     vault_path = replace(local.vault_path, "/", "_")
   })
   replication {
-    automatic = true
+    auto {}
   }
 }
 
